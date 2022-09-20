@@ -6,8 +6,8 @@ const PostSchema = new mongooose.Schema({
     location: {type: String,required: true},
     likes: {type: Number,required: true},
     description: {type: String,required: true},
-    PostImage: {data: Buffer,contentType: String},
-    date: {type: String,required: true}
+    PostImage: {type:String},
+    date: {type:Date , default:Date.now}
 }, {
     versionKey: false 
 })

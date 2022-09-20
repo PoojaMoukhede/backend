@@ -1,16 +1,22 @@
-const app = require('./app');
+const express = require("express")
+const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 const PORT = process.env.PORT || 5000;
+const cors = require("cors")
+const router= require("./app")
 
 
 // mongoose.connect('mongodb+srv://Anantha:Anantha@cluster0.nuxbelc.mongodb.net/?retryWrites=true&w=majority');
 
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+mongoose.connect("mongodb+srv://poojaM:poojaM@cluster0.o0oacpw.mongodb.net/instagram?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log('connected to DB')
 })
 
+app.use(cors())
+app.use(express.static("public"))
+app.use(router)
 
 
 app.listen(PORT, () => {

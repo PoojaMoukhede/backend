@@ -5,43 +5,43 @@ const cors = require('cors');
 const multer = require('multer');
 const Post = require('./Models/Post');
 const fs = require('fs');
+const path = require("path")
+const router= express.Router()
 
-const storage = multer.diskStorage({
-    destination: './images',
-    filename: function (req, file, cb) {
-        cb(null, file.originalname)
-    }
-})
-
-const upload = multer({ storage: storage })
+const Storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "./public/images");
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+    },
+  });
+const upload = multer({ storage: Storage })
 
 app.use(bodyParser.json());
 app.use(cors());
 
 
-app.get('/', async (req, res) => {
+router.get('/', async (req, res) => {
     console.log("Browser requested");
     try {
         const results = await Post.find();
         res.json(results);
     } catch (e) {
         res.status(400).json({ error: e })
+        console.log(e)
     }
 })
-app.post('/post', upload.single('PostImage'), async (req, res) => {
+router.post('/post', upload.single('PostImage'), async (req, res) => {
     try {
-        let data = new Post({
-            "name": await req.body.name,
-            "location": await req.body.location,
-            "likes": 30,
-            "description": await req.body.description,
-            "PostImage": {
-                data: fs.readFileSync('images/' + req.file.filename),
-                contentType: 'image/png'
-            },
-            "date": new Date().toLocaleDateString()
+        let data =  await  Post.create({
+            name: req.body.name,
+            location: req.body.location,
+            likes: 30,
+            description:req.body.description,
+            PostImage: "/images/"+req.file.filename,
         })
-        await data.save();
+       
         res.status(201).json(data);
     } catch (e) {
         res.status(400).json({ message: e.message })
@@ -50,4 +50,4 @@ app.post('/post', upload.single('PostImage'), async (req, res) => {
 
 
 
-module.exports = app;
+module.exports = router;
