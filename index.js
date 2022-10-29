@@ -8,7 +8,6 @@ const cors = require("cors")
 const router= require("./app")
 
 
-// mongoose.connect('mongodb+srv://Anantha:Anantha@cluster0.nuxbelc.mongodb.net/?retryWrites=true&w=majority');
 
 mongoose.connect("mongodb+srv://poojaM:poojaM@cluster0.o0oacpw.mongodb.net/instagram?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log('connected to DB')
